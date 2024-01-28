@@ -361,3 +361,13 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/.vsconfig
+/Assembly-CSharp.csproj
+/Assets
+/Library
+/ProjectSettings
+/Temp
+/UnityAI-AStarPathfinding.sln
+/UserSettings
+/UserSettings/EditorUserSettings.asset
+/UserSettings/Search.settings
