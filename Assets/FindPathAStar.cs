@@ -65,7 +65,7 @@ public class FindPathAStar : MonoBehaviour
     PathMarker goalNode;
     PathMarker startNode;
     PathMarker lastPos;
-    bool done = false;
+    bool done = false; //
 
     // Start is called before the first frame update
     void Start()

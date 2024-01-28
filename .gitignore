@@ -363,7 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 /.vsconfig
 /Assembly-CSharp.csproj
-/Assets
 /Library
 /ProjectSettings
 /Temp
@@ -371,3 +370,6 @@ FodyWeavers.xsd
 /UserSettings
 /UserSettings/EditorUserSettings.asset
 /UserSettings/Search.settings
+/Assets/Scenes
+/Assets/Models
+/Assets/AStarPath.unity
