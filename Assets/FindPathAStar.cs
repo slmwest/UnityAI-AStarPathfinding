@@ -122,6 +122,14 @@ public class FindPathAStar : MonoBehaviour
         return false;
     }
 
+    void SearchUntilGoal(PathMarker thisNode)
+    {
+        while (!done)
+        {
+            Search(lastPos);
+        }
+        GetPath();
+    }
     void Search(PathMarker thisNode)
     {
         if (thisNode == null) return;
@@ -194,17 +202,42 @@ public class FindPathAStar : MonoBehaviour
         
     }
 
+    // retrace steps from goal node back to start position using parent nodes iteratively
+    void GetPath()
+    {
+        RemoveAllMarkers();
+        PathMarker begin = lastPos; // goal node
+        List<PathMarker> path = new List<PathMarker>();
+        path.Add(begin);
+        int i = 0;
+        while (!startNode.Equals(begin) && begin != null && i<1000)
+        {
+            Instantiate(pathP, new Vector3(begin.location.x * maze.scale, 0, begin.location.z * maze.scale), Quaternion.identity);
+            begin = begin.parent;
+            path.Add(begin);
+            i++;
+        }
+
+        Instantiate(pathP, new Vector3(startNode.location.x * maze.scale, 0, startNode.location.z * maze.scale), Quaternion.identity);
+
+        Debug.Log(i.ToString());
+
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        // create a new set of start/goal nodes
+        if (Input.GetKeyDown(KeyCode.Space)) { BeginSearch(); }
+
+        // iterative solution for learning
+        if (Input.GetKey(KeyCode.C) && !done) {  Search(lastPos); }
+        if (Input.GetKeyDown(KeyCode.M) && done)
         {
-            BeginSearch();
+            GetPath();
         }
 
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            Search(lastPos); // delete me later? for testing!
-        }
+        // see instant solution!
+        if (Input.GetKeyDown(KeyCode.X)) { SearchUntilGoal(lastPos); }
     }
 }
