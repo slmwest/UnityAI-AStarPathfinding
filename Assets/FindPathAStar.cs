@@ -134,9 +134,15 @@ public class FindPathAStar : MonoBehaviour
             if (maze.map[neighbour.x, neighbour.z] == 1) { continue; }
             if (neighbour.x >= maze.width || neighbour.z >= maze.depth) { continue; }
             if (neighbour.x < 1 || neighbour.z < 1) { continue; }
-            if (IsClosed(neighbour)) { continue; }  
+            if (IsClosed(neighbour)) { continue; }
 
-            //open.Add(new PathMarker(neighbour));
+            // calculate fitness
+            float G = Vector2.Distance(thisNode.location.ToVector(), neighbour.ToVector()) + thisNode.G;
+            float H = Vector2.Distance(neighbour.ToVector(), goalNode.location.ToVector());
+            float F = G + H;
+
+            GameObject pathBlock = Instantiate(pathP, new Vector3(neighbour.x * maze.scale, 0, neighbour.z * maze.scale), Quaternion.identity);
+
         }
     }
 
