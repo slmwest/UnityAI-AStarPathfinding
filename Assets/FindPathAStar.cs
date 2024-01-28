@@ -83,9 +83,9 @@ public class FindPathAStar : MonoBehaviour
 
         // find free, e.g. open, locations on this randomly generated maze
         List<MapLocation> locations = new List<MapLocation>();
-        for (int z = 1; z < maze.depth; z++)
+        for (int z = 1; z < maze.depth - 1; z++)
         {
-            for (int x = 1; x < maze.depth; x++)
+            for (int x = 1; x < maze.width - 1; x++)
             {
                 if (maze.map[x, z] != 1)
                 {
@@ -100,13 +100,13 @@ public class FindPathAStar : MonoBehaviour
 
         Vector3 startLocation = new Vector3(locations[0].x, 0, locations[0].z); // translate grid location to game actual location (Vector3)
         startNode = new PathMarker(new MapLocation(locations[0].x, locations[0].z), 0, 0, 0,
-                                    Instantiate(start, startLocation, Quaternion.identity),
+                                   Instantiate(start, startLocation, Quaternion.identity),
                                    null);
 
         Vector3 goalLocation = new Vector3(locations[1].x, 0, locations[1].z); // translate grid location to game actual location (Vector3)
         goalNode = new PathMarker(new MapLocation(locations[1].x, locations[1].z), 0, 0, 0,
-                                    Instantiate(end, goalLocation, Quaternion.identity),
-                                   null);
+                                  Instantiate(end, goalLocation, Quaternion.identity),
+                                  null);
 
     }
 
