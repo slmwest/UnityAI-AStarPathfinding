@@ -124,6 +124,7 @@ public class FindPathAStar : MonoBehaviour
 
     void Search(PathMarker thisNode)
     {
+        if (thisNode == null) return;
         if (thisNode.Equals(goalNode)) { done = true; return; }
 
         foreach (MapLocation dir in maze.directions)
@@ -141,9 +142,50 @@ public class FindPathAStar : MonoBehaviour
             float H = Vector2.Distance(neighbour.ToVector(), goalNode.location.ToVector());
             float F = G + H;
 
+            // provide visual feedback - not required in production algorithm!
             GameObject pathBlock = Instantiate(pathP, new Vector3(neighbour.x * maze.scale, 0, neighbour.z * maze.scale), Quaternion.identity);
+            TextMesh[] values = pathBlock.GetComponentsInChildren<TextMesh>();
+            values[0].text = "G: " + G.ToString("0.00");
+            values[1].text = "H: " + H.ToString("0.00");
+            values[2].text = "F: " + F.ToString("0.00");
+
+            // add a new PathMarker if not already in open list. If already in list, simply update with current fitness stats
+            if (!UpdateMarker(neighbour, G, H, F, thisNode))
+            {
+                open.Add(new PathMarker(neighbour, G, H, F, pathBlock, thisNode));
+            }
 
         }
+
+        // find winning node. To do this, order by F and then by H as tiebreaker. We use the Linq library for this!
+        open = open.OrderBy(p => p.F).ThenBy(n => n.H).ToList<PathMarker>();
+
+        // store winning node in closed list then remove from open list
+        //PathMarker pm = open[0]; // this should be sufficient, but below is a more robust version
+        PathMarker pm = (PathMarker)open.ElementAt(0);
+        closed.Add(pm);
+        open.RemoveAt(0);
+
+        // change color of pathmarker to signal it is winning node
+        pm.marker.GetComponent<Renderer>().material = closedMaterial;
+        lastPos = pm;
+    }
+
+    // update any open nodes with values quantifying fitness
+    bool UpdateMarker(MapLocation pos, float g, float h, float f, PathMarker prt)
+    {
+        foreach (PathMarker p in open)
+        {
+            if (p.Equals(pos))
+            {
+                p.G = g;
+                p.H = h;
+                p.F = f;
+                p.parent = prt;
+                return true;
+            }
+        }
+        return false;
     }
 
     // Start is called before the first frame update
@@ -159,6 +201,10 @@ public class FindPathAStar : MonoBehaviour
         {
             BeginSearch();
         }
-        
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            Search(lastPos); // delete me later? for testing!
+        }
     }
 }
