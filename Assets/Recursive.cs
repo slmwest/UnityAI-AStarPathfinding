@@ -22,4 +22,5 @@ public class Recursive : Maze
         Generate(x + directions[3].x, z + directions[3].z);
     }
 
+
 }

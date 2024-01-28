@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MapLocation       
@@ -20,6 +21,23 @@ public class MapLocation
 
     public static MapLocation operator +(MapLocation a, MapLocation b)
        => new MapLocation(a.x + b.x, a.z + b.z);
+
+    // compare whether passed-in argument obj equals THIS object. Keyword "this" is implied sometimes...!
+    public override bool Equals(object obj)
+    {
+        if (obj == null || !this.GetType().Equals(obj.GetType()))
+        {
+            return false;
+        } else
+        {
+            return x == ((MapLocation)obj).x && z == ((MapLocation)obj).z;
+        }
+    }
+
+    public override int GetHashCode()
+    {
+        return 0;
+    }
 
 }
 
