@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-
-
+using Unity.VisualScripting;
 
 public class PathMarker
 {
@@ -98,16 +97,47 @@ public class FindPathAStar : MonoBehaviour
         // create start and end points
         locations.Shuffle();
 
-        Vector3 startLocation = new Vector3(locations[0].x, 0, locations[0].z); // translate grid location to game actual location (Vector3)
+        Vector3 startLocation = new Vector3(locations[0].x * maze.scale, 0, locations[0].z * maze.scale); // translate grid location to game actual location (Vector3)
         startNode = new PathMarker(new MapLocation(locations[0].x, locations[0].z), 0, 0, 0,
                                    Instantiate(start, startLocation, Quaternion.identity),
                                    null);
 
-        Vector3 goalLocation = new Vector3(locations[1].x, 0, locations[1].z); // translate grid location to game actual location (Vector3)
+        Vector3 goalLocation = new Vector3(locations[1].x * maze.scale, 0, locations[1].z * maze.scale); // translate grid location to game actual location (Vector3)
         goalNode = new PathMarker(new MapLocation(locations[1].x, locations[1].z), 0, 0, 0,
                                   Instantiate(end, goalLocation, Quaternion.identity),
                                   null);
 
+        open.Clear();
+        closed.Clear();
+        open.Add(startNode);
+        lastPos = startNode;
+    }
+
+    bool IsClosed(MapLocation marker)
+    {
+        foreach (PathMarker p in closed)
+        {
+            if (p.location.Equals(marker)) return true;
+        }
+        return false;
+    }
+
+    void Search(PathMarker thisNode)
+    {
+        if (thisNode.Equals(goalNode)) { done = true; return; }
+
+        foreach (MapLocation dir in maze.directions)
+        {
+            MapLocation neighbour = dir + thisNode.location; 
+
+            // locations to exclude from search
+            if (maze.map[neighbour.x, neighbour.z] == 1) { continue; }
+            if (neighbour.x >= maze.width || neighbour.z >= maze.depth) { continue; }
+            if (neighbour.x < 1 || neighbour.z < 1) { continue; }
+            if (IsClosed(neighbour)) { continue; }  
+
+            //open.Add(new PathMarker(neighbour));
+        }
     }
 
     // Start is called before the first frame update

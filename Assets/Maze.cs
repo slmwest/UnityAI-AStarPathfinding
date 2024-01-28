@@ -19,6 +19,7 @@ public class MapLocation
         return new Vector2(x, z);
     }
 
+    // defines how to treat this type of object when doing mathematical operations with them!
     public static MapLocation operator +(MapLocation a, MapLocation b)
        => new MapLocation(a.x + b.x, a.z + b.z);
 
